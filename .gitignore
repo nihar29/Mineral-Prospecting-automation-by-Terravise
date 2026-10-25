@@ -1,0 +1,43 @@
+# Data and generated outputs (tracked with DVC, not Git)
+data/raw/*
+data/interim/*
+data/processed/*
+data/demo/*
+!data/**/.gitkeep
+!data/raw/labels/
+data/raw/labels/*
+!data/raw/labels/copper_occurrences_template.csv
+artifacts/*
+!artifacts/.gitkeep
+outputs/*
+!outputs/.gitkeep
+reports/report.html
+reports/qa/*
+!reports/qa/.gitkeep
+config/params_demo.yaml
+
+# MLflow / Snakemake
+mlruns/
+mlartifacts/
+mlflow.db
+.snakemake/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Secrets
+.env
+.netrc

@@ -1,0 +1,27 @@
+# pip alternative to environment.yml (conda is recommended on Windows for GDAL)
+numpy
+pandas
+pyarrow
+scipy
+rasterio
+rioxarray
+xarray
+geopandas
+pyogrio
+shapely
+scikit-learn
+lightgbm
+statsmodels
+optuna
+shap
+mlflow
+snakemake
+matplotlib
+folium
+jinja2
+pyyaml
+pystac-client
+planetary-computer
+earthaccess
+pytest
+ruff

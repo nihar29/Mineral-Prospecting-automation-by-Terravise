@@ -1,0 +1,100 @@
+# =============================================================
+# Mineral Prospecting Automation by Terravise
+# Single configuration file that drives every pipeline stage.
+# =============================================================
+
+project:
+  name: copper_prospectivity
+  seed: 42
+
+aoi: config/aoi_example.geojson          # replace with your study-area polygon
+
+grid:
+  crs: "EPSG:32735"                       # UTM 35S (Zambian Copperbelt); change for other AOIs
+  res: 30                                 # metres
+  nodata: -9999
+
+paths:
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  artifacts: artifacts
+  outputs: outputs
+  reports: reports
+
+# -------------------------------------------------------------
+# Stage 1: data download
+# -------------------------------------------------------------
+sources:
+  landsat:
+    enabled: true
+    collection: landsat-c2-l2
+    dates: "2023-05-01/2023-10-31"         # dry season
+    max_cloud: 10
+    bands: [blue, green, red, nir08, swir16, swir22, lwir11]
+  dem:
+    enabled: true
+    collection: cop-dem-glo-30
+  aster:
+    enabled: false                         # needs NASA Earthdata login (earthaccess)
+    short_name: AST_07XT
+    dates: "2000-03-01/2008-03-31"         # SWIR detector failed April 2008
+  sentinel1:
+    enabled: false
+    collection: sentinel-1-rtc
+    dates: "2023-06-01/2023-09-30"
+    pol: [vv, vh]
+
+# Layers you provide yourself (geophysics, geology, soil). Put them here.
+manual_layers:
+  continuous:
+    gravity: data/raw/geophysics/gravity.tif
+    magnetic: data/raw/geophysics/magnetic.tif
+  categorical:
+    geology: data/raw/geology/geology.tif
+
+labels:
+  positives: data/raw/labels/copper_occurrences.csv   # columns: Name, Latitude, Longitude
+  neg_ratio: 5                                        # negatives per positive
+  neg_buffer_m: 2000                                  # min distance of negatives from deposits
+  pos_buffer_px: 1                                    # include neighbouring pixels as positives
+
+# -------------------------------------------------------------
+# Stages 2-3: preprocessing and features
+# -------------------------------------------------------------
+features:
+  ratios: [iron_oxide, clay_carbonate, ferrous, ndvi]
+  ndvi_mask_threshold: 0.5
+  terrain: [slope, aspect, curvature]
+  max_nodata_frac: 0.4
+  corr_threshold: 0.85
+  vif_max: 10
+  rfecv: true
+
+# -------------------------------------------------------------
+# Stage 4: training
+# -------------------------------------------------------------
+cv:
+  block_size_m: 10000
+  n_folds: 5
+
+models: [logreg, rf, lightgbm]
+optuna_trials: 0          # set > 0 to enable hyperparameter search
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db     # local DB; supports the model registry
+  experiment: copper_prospectivity
+  model_name: copper_prospectivity
+
+# -------------------------------------------------------------
+# Stage 7: prediction
+# -------------------------------------------------------------
+predict:
+  window: 512
+  classes:                # probability quantiles -> 4 prospectivity classes
+    low: 0.50
+    moderate: 0.75
+    high: 0.90
+
+report:
+  formats: [html]

@@ -1,0 +1,20 @@
+{
+  "type": "FeatureCollection",
+  "name": "aoi_example",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"name": "Example AOI - replace with your study area"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [27.70, -12.70],
+          [28.00, -12.70],
+          [28.00, -12.40],
+          [27.70, -12.40],
+          [27.70, -12.70]
+        ]]
+      }
+    }
+  ]
+}

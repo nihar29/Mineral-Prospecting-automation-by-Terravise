@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Lint
+        run: ruff check src tests scripts
+      - name: Unit tests
+        run: pytest -q
+      - name: End-to-end smoke run on synthetic data
+        run: |
+          python scripts/make_synthetic_data.py
+          snakemake --cores 2 --config cfg=config/params_demo.yaml

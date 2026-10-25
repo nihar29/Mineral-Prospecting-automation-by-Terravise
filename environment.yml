@@ -1,0 +1,36 @@
+name: terravise-prospecting
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - gdal
+  - rasterio
+  - rioxarray
+  - xarray
+  - geopandas
+  - pyogrio
+  - shapely
+  - scipy
+  - numpy
+  - pandas
+  - pyarrow
+  - scikit-learn
+  - lightgbm
+  - xgboost
+  - statsmodels
+  - optuna
+  - shap
+  - imbalanced-learn
+  - mlflow
+  - snakemake-minimal
+  - dvc
+  - matplotlib
+  - folium
+  - jinja2
+  - pyyaml
+  - pystac-client
+  - planetary-computer
+  - earthaccess
+  - pytest
+  - ruff
+  - pip
